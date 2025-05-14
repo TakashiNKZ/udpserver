@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Logs</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #111;
+            color: #0f0;
+            padding: 20px;
+        }
+        #log-container {
+            white-space: pre-wrap;
+            border: 1px solid #0f0;
+            padding: 10px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>📄 Real-time Logs</h1>
+    <div id="log-container">Loading logs...</div>
+
+    <script>
+        function updateLogs() {
+            fetch('/logs?' + new Date().getTime())  // отключение кэша
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('log-container');
+                    container.textContent = data.logs.join('\n');
+                    container.scrollTop = container.scrollHeight;  // авто-прокрутка вниз
+                });
+        }
+
+        setInterval(updateLogs, 1000);  // обновление каждую секунду
+        updateLogs();  // первая загрузка
+    </script>
+</body>
+</html>
